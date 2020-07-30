@@ -1,4 +1,5 @@
 package xyz.vaelot.dupeflattener.model
 
-class HeapStruct : Struct {
-}
+import xyz.vaelot.dupeflattener.def.Struct
+
+class HeapStruct : Struct

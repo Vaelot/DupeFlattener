@@ -1,6 +1,5 @@
 package xyz.vaelot.dupeflattener.model
 
-import java.io.Serializable
+import xyz.vaelot.dupeflattener.def.Struct
 
-class HashTableStruct : Struct {
-}
+class HashTableStruct : Struct

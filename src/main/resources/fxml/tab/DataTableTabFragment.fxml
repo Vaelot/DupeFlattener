@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<AnchorPane xmlns="http://javafx.com/javafx" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+    <TableView prefHeight="330.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columns>
+            <TableColumn prefWidth="35.0" text="ID" />
+            <TableColumn prefWidth="115.0" text="Name" />
+            <TableColumn prefWidth="116.0" text="Path" />
+            <TableColumn prefWidth="58.0" text="Type" />
+            <TableColumn prefWidth="88.0" text="Size" />
+            <TableColumn prefWidth="91.0" text="Hash(Blake2b)" />
+            <TableColumn prefWidth="92.0" text="Is duplicated?" />
+        </columns>
+    </TableView>
+</AnchorPane>

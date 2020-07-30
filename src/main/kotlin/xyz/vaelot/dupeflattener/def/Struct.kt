@@ -1,4 +1,4 @@
-package xyz.vaelot.dupeflattener.model
+package xyz.vaelot.dupeflattener.def
 
 import java.io.Serializable
 

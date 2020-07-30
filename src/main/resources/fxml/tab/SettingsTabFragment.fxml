@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<SplitPane xmlns="http://javafx.com/javafx"
+           dividerPositions="0.25" prefHeight="160.0" prefWidth="200.0">
+    <AnchorPane>
+        <ScrollPane fitToHeight="true" hmax="0.0" pannable="true" prefHeight="313.0" prefWidth="149.0"
+                    vbarPolicy="ALWAYS" vmax="0.0" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="4.0"
+                    AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0"/>
+        <Button layoutX="5.0" layoutY="321.0" maxHeight="25.0" maxWidth="1.7976931348623157E308"
+                minHeight="25.0" mnemonicParsing="false" prefHeight="25.0" text="Add Directory..."
+                AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0"/>
+    </AnchorPane>
+    <VBox alignment="CENTER" spacing="4.0">
+        <Label text="Worker Settings">
+            <VBox.margin>
+                <Insets bottom="8.0"/>
+            </VBox.margin>
+        </Label>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label alignment="CENTER" text="Compute Worker number:">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <Slider id="computeWorkerNum" max="16.0" maxWidth="1.7976931348623157E308" min="1.0" value="2.0"
+                    HBox.hgrow="ALWAYS"/>
+            <Label id="computeWorkerLabel" alignment="CENTER" text="1"/>
+        </HBox>
+        <HBox alignment="CENTER" layoutX="14.0" layoutY="169.0" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label maxWidth="1.7976931348623157E308" text="Create I/O Worker for each devices:"
+                   HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <CheckBox mnemonicParsing="false">
+                <HBox.margin>
+                    <Insets right="20.0"/>
+                </HBox.margin>
+            </CheckBox>
+        </HBox>
+        <Separator prefWidth="200.0"/>
+        <Label text="Pending Queue Size Settings">
+            <VBox.margin>
+                <Insets bottom="8.0"/>
+            </VBox.margin>
+        </Label>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label alignment="CENTER" text="File Search:">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <Slider maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+            <Label alignment="CENTER" text="1"/>
+        </HBox>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label alignment="CENTER" text="Prediction:">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <Slider maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+            <Label alignment="CENTER" text="1"/>
+        </HBox>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label alignment="CENTER" text="Comparison:">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <Slider maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+            <Label alignment="CENTER" text="1"/>
+        </HBox>
+        <Separator prefWidth="200.0"/>
+        <Label text="Miscellaneous Settings">
+            <VBox.margin>
+                <Insets bottom="8.0"/>
+            </VBox.margin>
+        </Label>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label maxWidth="1.7976931348623157E308" text="Disable prediction stage:" HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <CheckBox mnemonicParsing="false">
+                <HBox.margin>
+                    <Insets right="20.0"/>
+                </HBox.margin>
+            </CheckBox>
+        </HBox>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label maxWidth="1.7976931348623157E308" text="Sort files with inode values for each stage:"
+                   HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <CheckBox mnemonicParsing="false">
+                <HBox.margin>
+                    <Insets right="20.0"/>
+                </HBox.margin>
+            </CheckBox>
+        </HBox>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label maxWidth="1.7976931348623157E308"
+                   text="Skip comparison(compare files when interact to duplicated files) (WIP):"
+                   HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <CheckBox mnemonicParsing="false">
+                <HBox.margin>
+                    <Insets right="20.0"/>
+                </HBox.margin>
+            </CheckBox>
+        </HBox>
+        <HBox alignment="CENTER" spacing="4.0">
+            <VBox.margin>
+                <Insets left="4.0" right="4.0"/>
+            </VBox.margin>
+            <Label maxWidth="1.7976931348623157E308" text="WIP" HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </Label>
+            <CheckBox mnemonicParsing="false">
+                <HBox.margin>
+                    <Insets right="20.0"/>
+                </HBox.margin>
+            </CheckBox>
+        </HBox>
+        <Separator prefWidth="200.0"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Start Analyze!"/>
+    </VBox>
+</SplitPane>

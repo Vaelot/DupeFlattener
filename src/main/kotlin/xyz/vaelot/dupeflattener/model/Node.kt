@@ -14,6 +14,7 @@ import java.io.Serializable
  * @property left Files that contains this node.
  * @property right Files that contains this node.
  */
+
 data class Node(val fsize: Int,
                 val hash: ByteArray) : Serializable {
     val files: ArrayList<IFile> = arrayListOf()
