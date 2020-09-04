@@ -20,6 +20,7 @@ dependencies {
     implementation("commons-cli:commons-cli:1.4")
     implementation("org.kocakosm:jblake2:0.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0-M1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0-M1")
 }
 tasks {
     compileKotlin {
