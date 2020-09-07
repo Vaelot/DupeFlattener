@@ -17,7 +17,8 @@ class HashTest {
                 Arguments.of(CRC32Hash(), "00000000"),
                 Arguments.of(MD5Hash(), "d41d8cd98f00b204e9800998ecf8427e"),
                 Arguments.of(SHA1Hash(), "da39a3ee5e6b4b0d3255bfef95601890afd80709"),
-                Arguments.of(SHA2Hash(), "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+                Arguments.of(SHA2Hash(), "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"),
+                Arguments.of(SumHash(), "00000000")
             )
         }
         @JvmStatic
@@ -27,7 +28,8 @@ class HashTest {
                 Arguments.of(CRC32Hash(), "d87f7e0c"),
                 Arguments.of(MD5Hash(), "098f6bcd4621d373cade4e832627b4f6"),
                 Arguments.of(SHA1Hash(), "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3"),
-                Arguments.of(SHA2Hash(), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+                Arguments.of(SHA2Hash(), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"),
+                Arguments.of(SumHash(), "00000000")
             )
         }
     }
