@@ -10,12 +10,14 @@ object Main {
         val predefined = arrayOf(
             Option("m", "mode", true,
                 "Select mode for operation."),
-            Option("s", "size", true,
-                "Set size limit of job pending queue."),
             Option("t", "threads", true,
                 "Set thread number of thread pool."),
             Option("l", "link", true,
-                "Select options for found duplicated files.")
+                "Select options for found duplicated files."),
+            Option("b", "barrier", false,
+                "Wait for each stage complete."),
+            Option("b", "barrier", false,
+                "Wait for each stage complete.")
         )
         predefined.forEach { opt.addOption(it) }
     }

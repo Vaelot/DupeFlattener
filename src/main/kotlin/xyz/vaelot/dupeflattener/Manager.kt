@@ -2,10 +2,17 @@ package xyz.vaelot.dupeflattener
 
 import xyz.vaelot.dupeflattener.hash.*
 import xyz.vaelot.dupeflattener.ds.*
-
+import xyz.vaelot.dupeflattener.cache.*
+import xyz.vaelot.dupeflattener.node.*
+import xyz.vaelot.dupeflattener.scan.*
+import java.io.Serializable
 import kotlin.reflect.KClass
 
-object Manager {
-    var ds: KClass<out DS> = HeapTreeDS::class
-    var hashAlg: KClass<out Hash> = Blake2bHash::class
+object Manager : Serializable {
+    @JvmStatic private val serialVersionUID: Long = 1L
+
+    lateinit var scan: IScan
+    lateinit var ds: IDS<INode>
+    @Transient lateinit var hashClass: KClass<IHash>
+    @Transient lateinit var cache: ICache
 }
