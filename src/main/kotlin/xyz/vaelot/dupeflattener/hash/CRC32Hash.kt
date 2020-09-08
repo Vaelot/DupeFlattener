@@ -3,8 +3,6 @@ package xyz.vaelot.dupeflattener.hash
 import java.security.MessageDigest
 import java.util.zip.CRC32
 
-import org.apache.commons.codec.digest.DigestUtils
-
 class CRC32Hash : Hash() {
     class CRC32Digest: MessageDigest("CRC") {
         private var crc = CRC32()
@@ -21,7 +19,7 @@ class CRC32Hash : Hash() {
             )
         }
     }
-    var crc32 = CRC32Digest()
+    private var crc32 = CRC32Digest()
     override fun flush() {
         crc32 = CRC32Digest()
     }

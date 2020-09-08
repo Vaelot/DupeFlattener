@@ -3,10 +3,8 @@ package xyz.vaelot.dupeflattener.node
 import xyz.vaelot.dupeflattener.Manager
 import java.io.File
 import java.io.FileInputStream
-import java.lang.IllegalArgumentException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import kotlin.reflect.full.createInstance
 
 class Node(p: String) : INode {
     override val path: MutableList<String>
@@ -14,7 +12,7 @@ class Node(p: String) : INode {
     override val size: Long
         get () = firstFile.length()
     override val hash: ByteArray by lazy {
-        Manager.hashClass.createInstance().hashFromFile(firstFile)
+        Manager.hashFromFile(firstFile)
     }
 
     init {
@@ -86,7 +84,7 @@ class Node(p: String) : INode {
         // second, check hash
         val otherFileHash = when (other) {
             is Node -> other.hash
-            else -> Manager.hashClass.createInstance().hashFromFile(otherFile)
+            else -> Manager.hashFromFile(otherFile)
         }
         if (!hash.contentEquals(otherFileHash)) return false
 

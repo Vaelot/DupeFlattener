@@ -5,13 +5,12 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.junit.jupiter.params.provider.ValueSource
 import java.util.stream.Stream
 
 class HashTest {
     companion object {
         @JvmStatic
-        fun HashEmptyProvider(): Stream<Arguments> {
+        fun hashEmptyProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(Blake2bHash(), "786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce"),
                 Arguments.of(CRC32Hash(), "00000000"),
@@ -22,7 +21,7 @@ class HashTest {
             )
         }
         @JvmStatic
-        fun HashTestProvider(): Stream<Arguments> {
+        fun hashTestProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(Blake2bHash(), "a71079d42853dea26e453004338670a53814b78137ffbed07603a41d76a483aa9bc33b582f77d30a65e6f29a896c0411f38312e1d66e0bf16386c86a89bea572"),
                 Arguments.of(CRC32Hash(), "d87f7e0c"),
@@ -36,7 +35,7 @@ class HashTest {
 
     @ParameterizedTest
     @DisplayName("Hash Group Test with Empty String")
-    @MethodSource("HashEmptyProvider")
+    @MethodSource("hashEmptyProvider")
     fun testWithEmpty(it: Hash, expected: String) {
         Assertions.assertEquals(expected, it.hexDigest())
         it.flush()
@@ -44,7 +43,7 @@ class HashTest {
 
     @ParameterizedTest
     @DisplayName("Hash Group Test with `test` string")
-    @MethodSource("HashTestProvider")
+    @MethodSource("hashTestProvider")
     fun testWithTest(it: Hash, expected: String) {
         it.update(byteArrayOf(116,101,115,116)) // test
         Assertions.assertEquals(expected, it.hexDigest())
