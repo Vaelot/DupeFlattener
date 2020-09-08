@@ -3,19 +3,22 @@ package xyz.vaelot.dupeflattener.node
 import xyz.vaelot.dupeflattener.Manager
 import java.io.File
 import java.io.FileInputStream
+import java.lang.IllegalArgumentException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import kotlin.reflect.full.createInstance
 
 class Node(p: String) : INode {
-    override lateinit var path: MutableList<String>
-    override lateinit var first: File
-    override val size: Long by lazy { first.length() }
-    override val hash: ByteArray by lazy { Manager.hashClass.createInstance().hashFromFile(first) }
+    override val path: MutableList<String>
+    override val firstFile: File = File(p)
+    override val size: Long
+        get () = firstFile.length()
+    override val hash: ByteArray by lazy {
+        Manager.hashClass.createInstance().hashFromFile(firstFile)
+    }
 
     init {
-        val first = File(p)
-        require (first.isFile) { "File $p not exists." }
+        require (firstFile.isFile) { "File $p not exists." }
         path = arrayListOf(p)
     }
 
@@ -24,34 +27,40 @@ class Node(p: String) : INode {
         path.add(p)
     }
 
-    fun compareTo(p: String): Int { return compareTo(File(p)) }
-    fun compareTo(f: File): Int {
-        require (f.isFile) { "File $f not exists." }
+    override fun compareTo(other: Any?): Int {
+        val otherFile = when (other) {
+            is String -> File(other)
+            is File -> other
+            is Node -> other.firstFile
+            else -> throw IllegalArgumentException("Argument is not File convertible.")
+        }
+        require (otherFile.isFile) { "File $other not exists." }
 
         // first, check size
 
-        val fl = f.length()
+        val otherFileLength = otherFile.length()
+        if (size != otherFileLength) return size.compareTo(otherFileLength)
 
-        if (size < fl) return -1
-        if (size > fl) return 1
+        // no check hash, because hash is useless for byte comparison.
 
-        // size is same
-
-        val tc = FileInputStream(first).channel
-        val oc = FileInputStream(f).channel
-        val tb = ByteBuffer.allocateDirect(16384)
-        val ob = ByteBuffer.allocateDirect(16384)
+        val thisFileChannel = FileInputStream(firstFile).channel
+        val otherFileChannel = FileInputStream(otherFile).channel
+        val thisFileBuffer = ByteBuffer.allocateDirect(16384)
+        val otherFileBuffer = ByteBuffer.allocateDirect(16384)
 
         while (true) {
-            if (!tb.hasRemaining()) {
-                val tl = tc.read(tb)
-                val ol = oc.read(ob)
-                if (tl > ol) return closeAndReturn(tc, oc, 1)
-                if (tl < ol) return closeAndReturn(tc, oc, -1)
-                if (tl == -1) return closeAndReturn(tc, oc, 0)
+            if (!thisFileBuffer.hasRemaining()) {
+                val thisFileReadSize = thisFileChannel.read(thisFileBuffer)
+                val otherFileReadSize = otherFileChannel.read(otherFileBuffer)
+                if (thisFileReadSize != otherFileReadSize) return closeAndReturn(
+                    thisFileChannel,
+                    otherFileChannel,
+                    thisFileReadSize.compareTo(otherFileReadSize)
+                )
+                if (thisFileReadSize == -1) return closeAndReturn(thisFileChannel, otherFileChannel, 0)
             }
-            val res = tb.compareTo(ob)
-            if (res != 0) return closeAndReturn(tc, oc, res)
+            val compareToResult = thisFileBuffer.compareTo(otherFileBuffer)
+            if (compareToResult != 0) return closeAndReturn(thisFileChannel, otherFileChannel, compareToResult)
         }
     }
 
@@ -61,31 +70,42 @@ class Node(p: String) : INode {
         return ret
     }
 
-    fun isIdentical(p: String): Boolean { return isIdentical(File(p)) }
-    fun isIdentical(f: File): Boolean {
-        require (f.isFile) { "File $f not exists." }
+    override fun equals(other: Any?): Boolean {
+        val otherFile = when (other) {
+            is String -> File(other)
+            is File -> other
+            is Node -> other.firstFile
+            else -> throw IllegalArgumentException("Argument is not File convertible.")
+        }
+
+        require (otherFile.isFile) { "File $otherFile not exists." }
 
         // first, check size
-        if (size != f.length()) return false
+        if (size != otherFile.length()) return false
+
         // second, check hash
-        val fHash = Manager.hashClass.createInstance().hashFromFile(f)
-        if (!hash.contentEquals(fHash)) return false
+        val otherFileHash = when (other) {
+            is Node -> other.hash
+            else -> Manager.hashClass.createInstance().hashFromFile(otherFile)
+        }
+        if (!hash.contentEquals(otherFileHash)) return false
 
         // last, real-data check
-
-        val tc = FileInputStream(first).channel
-        val oc = FileInputStream(f).channel
-        val tb = ByteBuffer.allocateDirect(16384)
-        val ob = ByteBuffer.allocateDirect(16384)
+        val thisFileChannel = FileInputStream(firstFile).channel
+        val otherFileChannel = FileInputStream(otherFile).channel
+        val thisFileBuffer = ByteBuffer.allocateDirect(16384)
+        val otherFileBuffer = ByteBuffer.allocateDirect(16384)
 
         while (true) {
-            if (!tb.hasRemaining()) {
-                val tl = tc.read(tb)
-                val ol = oc.read(ob)
-                if (tl != ol) return false
-                if (tl == -1) return true
+            if (!thisFileBuffer.hasRemaining()) {
+                val thisFileReadSize = thisFileChannel.read(thisFileBuffer)
+                val otherFileReadSize = otherFileChannel.read(otherFileBuffer)
+                if (thisFileReadSize != otherFileReadSize) return false
+                if (thisFileReadSize == -1) return true
             }
-            if (tb.compareTo(ob) != 0) return false
+            if (thisFileBuffer.compareTo(otherFileBuffer) != 0) return false
         }
     }
+
+    override fun hashCode(): Int { return hash.sum() }
 }
