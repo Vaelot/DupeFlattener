@@ -7,12 +7,15 @@ import kotlin.collections.HashMap
 import kotlin.reflect.full.primaryConstructor
 
 class HashTableDS: DS() {
-    private val st: HashMap<ByteArray, ArrayList<INode>> = hashMapOf()
+    private val st: HashMap<List<Byte>, ArrayList<INode>> = hashMapOf()
 
     override fun add(d: File) {
         val n = Manager.nodeClass.primaryConstructor!!.call(d.path)
-        st.getOrElse(n.hash) { st[n.hash] = arrayListOf(n); st[n.hash] }
-            ?.find { it == d }
-            ?.add(d.path)
+        val k = n.hash.toList()
+        if (st.containsKey(k)) {
+            st[k]!!.find { it == n }!!.add(d.path)
+        } else {
+            st[k] = arrayListOf(n)
+        }
     }
 }
