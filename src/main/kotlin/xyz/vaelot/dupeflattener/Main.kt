@@ -1,7 +1,7 @@
 package xyz.vaelot.dupeflattener
 
-import org.apache.commons.cli.Options
 import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
 
 object Main {
     @JvmStatic

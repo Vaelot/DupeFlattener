@@ -2,9 +2,6 @@ package xyz.vaelot.dupeflattener.node
 
 import xyz.vaelot.dupeflattener.Manager
 import java.io.File
-import java.io.FileInputStream
-import java.nio.ByteBuffer
-import java.nio.channels.FileChannel
 
 class Node(p: String) : INode {
     override val path: MutableList<String>
@@ -41,31 +38,21 @@ class Node(p: String) : INode {
 
         // no check hash, because hash is useless for byte comparison.
 
-        val thisFileChannel = FileInputStream(firstFile).channel
-        val otherFileChannel = FileInputStream(otherFile).channel
-        val thisFileBuffer = ByteBuffer.allocateDirect(16384)
-        val otherFileBuffer = ByteBuffer.allocateDirect(16384)
-
-        while (true) {
-            if (!thisFileBuffer.hasRemaining()) {
-                val thisFileReadSize = thisFileChannel.read(thisFileBuffer)
-                val otherFileReadSize = otherFileChannel.read(otherFileBuffer)
-                if (thisFileReadSize != otherFileReadSize) return closeAndReturn(
-                    thisFileChannel,
-                    otherFileChannel,
-                    thisFileReadSize.compareTo(otherFileReadSize)
-                )
-                if (thisFileReadSize == -1) return closeAndReturn(thisFileChannel, otherFileChannel, 0)
+        firstFile.inputStream()
+            .buffered(4096)
+            .use { tit ->
+            otherFile.inputStream()
+                .buffered(4096)
+                .use { oit ->
+                    while (true) {
+                        val t = tit.read()
+                        val o = oit.read()
+                        if (t < 0) return if (o < 0) 0 else -1
+                        if (o < 0) return 1
+                        if (t != o) return (t.toByte()).compareTo(o.toByte())
+                    }
+                }
             }
-            val compareToResult = thisFileBuffer.compareTo(otherFileBuffer)
-            if (compareToResult != 0) return closeAndReturn(thisFileChannel, otherFileChannel, compareToResult)
-        }
-    }
-
-    private fun closeAndReturn(a: FileChannel, b: FileChannel, ret: Int): Int {
-        a.close()
-        b.close()
-        return ret
     }
 
     override fun equals(other: Any?): Boolean {
@@ -89,20 +76,21 @@ class Node(p: String) : INode {
         if (!hash.contentEquals(otherFileHash)) return false
 
         // last, real-data check
-        val thisFileChannel = FileInputStream(firstFile).channel
-        val otherFileChannel = FileInputStream(otherFile).channel
-        val thisFileBuffer = ByteBuffer.allocateDirect(16384)
-        val otherFileBuffer = ByteBuffer.allocateDirect(16384)
-
-        while (true) {
-            if (!thisFileBuffer.hasRemaining()) {
-                val thisFileReadSize = thisFileChannel.read(thisFileBuffer)
-                val otherFileReadSize = otherFileChannel.read(otherFileBuffer)
-                if (thisFileReadSize != otherFileReadSize) return false
-                if (thisFileReadSize == -1) return true
+        firstFile.inputStream()
+            .buffered(4096)
+            .use { tit ->
+                otherFile.inputStream()
+                    .buffered(4096)
+                    .use { oit ->
+                        while (true) {
+                            val t = tit.read()
+                            val o = oit.read()
+                            if (t < 0) return o < 0
+                            if (o < 0) return false
+                            if (t != o) return false
+                        }
+                    }
             }
-            if (thisFileBuffer.compareTo(otherFileBuffer) != 0) return false
-        }
     }
 
     override fun hashCode(): Int { return hash.sum() }
