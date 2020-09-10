@@ -2,11 +2,11 @@ package xyz.vaelot.dupeflattener.node
 
 import java.io.File
 
-interface INode: Comparable<Any?> {
+interface INode: Comparable<File> {
     val path: MutableList<String>
-    val firstFile: File
+    val first: File
     val size: Long
     val hash: ByteArray
 
-    fun add(p: String)
+    fun add(p: File)
 }

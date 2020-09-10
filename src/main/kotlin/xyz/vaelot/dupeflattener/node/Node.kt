@@ -3,45 +3,39 @@ package xyz.vaelot.dupeflattener.node
 import xyz.vaelot.dupeflattener.Manager
 import java.io.File
 
-class Node(p: String) : INode {
+class Node(override val first: File) : INode {
     override val path: MutableList<String>
-    override val firstFile: File = File(p)
-    override val size: Long
-        get () = firstFile.length()
-    override val hash: ByteArray by lazy {
-        Manager.hashFromFile(firstFile)
-    }
+    override val size: Long by lazy { first.length() }
+    override val hash: ByteArray by lazy { Manager.hashFromFile(first) }
 
     init {
-        require (firstFile.isFile) { "File $p not exists." }
-        path = arrayListOf(p)
+        require (first.isFile) { "File ${first.path} not exists." }
+        path = arrayListOf(first.path)
     }
 
-    override fun add(p: String) {
-        require (File(p).isFile) { "File $p not exists." }
-        path.add(p)
+    override fun add(p: File) {
+        require (p.isFile) { "File $p not exists." }
+        path.add(p.path)
     }
 
-    override fun compareTo(other: Any?): Int {
-        val otherFile = when (other) {
-            is String -> File(other)
-            is File -> other
-            is Node -> other.firstFile
-            else -> throw IllegalArgumentException("Argument is not File convertible.")
-        }
-        require (otherFile.isFile) { "File $other not exists." }
+    @Deprecated("compareTo with String is not recommended.",
+        ReplaceWith("compareTo(File(that))", "java.io.File"))
+    fun compareTo(that: String): Int = compareTo(File(that))
+
+    override fun compareTo(other: File): Int {
+        require (other.isFile) { "File $other not exists." }
 
         // first, check size
 
-        val otherFileLength = otherFile.length()
-        if (size != otherFileLength) return size.compareTo(otherFileLength)
+        val thatSize = other.length()
+        if (size != thatSize) return size.compareTo(thatSize)
 
         // no check hash, because hash is useless for byte comparison.
 
-        firstFile.inputStream()
+        first.inputStream()
             .buffered(4096)
             .use { tit ->
-            otherFile.inputStream()
+            other.inputStream()
                 .buffered(4096)
                 .use { oit ->
                     while (true) {
@@ -59,24 +53,19 @@ class Node(p: String) : INode {
         val otherFile = when (other) {
             is String -> File(other)
             is File -> other
-            is Node -> other.firstFile
-            else -> throw IllegalArgumentException("Argument is not File convertible.")
+            else -> return false
         }
-
         require (otherFile.isFile) { "File $otherFile not exists." }
 
         // first, check size
         if (size != otherFile.length()) return false
 
         // second, check hash
-        val otherFileHash = when (other) {
-            is Node -> other.hash
-            else -> Manager.hashFromFile(otherFile)
-        }
-        if (!hash.contentEquals(otherFileHash)) return false
+        val thatHash = Manager.hashFromFile(otherFile)
+        if (!hash.contentEquals(thatHash)) return false
 
         // last, real-data check
-        firstFile.inputStream()
+        first.inputStream()
             .buffered(4096)
             .use { tit ->
                 otherFile.inputStream()
